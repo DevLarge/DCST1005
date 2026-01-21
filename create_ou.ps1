@@ -1,4 +1,4 @@
-$domainPath = "DC=infrait, DC=sec"
+$domainPath = "DC=infraIT,DC=sec"
 function Create-ADOU {
     param (
         [string]$Name,
@@ -7,7 +7,7 @@ function Create-ADOU {
 
     try {
         # Check if exists
-        if (Get-ADOrganizationalUnit -Filter "Name -eq $Name" -SearchBase $Path) {
+        if (Get-ADOrganizationalUnit -Filter "Name -eq '$Name'" -SearchBase $Path) {
             # If exists
             Write-Host "OU: $Name already exists!" -ForegroundColor Yellow
             return $true
@@ -24,20 +24,25 @@ function Create-ADOU {
     }
 } 
 
-$parentCreated = Create-ADOU -Name "TestParent" -Path $domainPath
-Write-Host $parentCreated !!!!!
+Create-ADOU -Name "InfraIT_Users" -Path $domainPath
 
-if ($parentCreated) {
-    $childCreated = Create-ADOU -Name "TestChild" -Path "TestParent"
-} else {
-    Write-Host "Parent not exists"
-    return $false
-}
+Create-ADOU -Name "Finance" -Path "OU=InfraIT_Users,$domainPath"
+Create-ADOU -Name "Sales" -Path "OU=InfraIT_Users,$domainPath"
+Create-ADOU -Name "IT" -Path "OU=InfraIT_Users,$domainPath"
+Create-ADOU -Name "Consultans" -Path "OU=InfraIT_Users,$domainPath"
+Create-ADOU -Name "HR" -Path "OU=InfraIT_Users,$domainPath"
 
-if ($childCreated) {
-    child_childCreated = Create-ADOU -Name "TestChildChild" -Path "TestChild"
-} else {
-    Write-Host "parent doesnt exists"
-    return $false
-}
 
+Create-ADOU -Name "InfraIT_Computers" -Path $domainPath
+
+Create-ADOU -Name "Workstations" -Path "OU=InfraIT_Computers,$domainPath"
+Create-ADOU -Name "Servers" -Path "OU=InfraIT_Computers,$domainPath"
+
+Create-ADOU -Name "Finance" -Path "OU=Workstations,OU=InfraIT_Computers,$domainPath"
+Create-ADOU -Name "Sales" -Path "OU=Workstations,OU=InfraIT_Computers,$domainPath"
+Create-ADOU -Name "IT" -Path "OU=Workstations,OU=InfraIT_Computers,$domainPath"
+Create-ADOU -Name "Consultants" -Path "OU=Workstations,OU=InfraIT_Computers,$domainPath"
+Create-ADOU -Name "HR" -Path "OU=Workstations,OU=InfraIT_Computers,$domainPath"
+
+
+Create-ADOU -Name "InfraIT_Groups" -Path $domainPath

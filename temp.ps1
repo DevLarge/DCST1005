@@ -1,0 +1,2 @@
+Set-ADOrganizationalUnit -Identity "OU=TestOU\,,DC=infrait,DC=sec" -ProtectedFromAccidentalDeletion $false
+Remove-ADOrganizationalUnit -Identity "OU=TestOU\,,DC=infrait,DC=sec" -Recursive -Confirm:$false
