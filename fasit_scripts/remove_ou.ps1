@@ -27,4 +27,4 @@ function Remove-ADOU {
     }
 } 
 
-$removed = Remove-ADOU -Name "TestOU\," -Path $domainPath
+#$removed = Remove-ADOU -Name "TestOU\," -Path $domainPath

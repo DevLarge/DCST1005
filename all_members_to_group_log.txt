@@ -1,0 +1,15 @@
+SUCCESS: Added astrid.e.haugen to group g_all_hr
+SUCCESS: Added ole.m.larsen to group g_all_it
+SUCCESS: Added ingrid.m.ostby to group g_all_it
+SUCCESS: Added erik.a.solberg to group g_all_sales
+SUCCESS: Added kristin.s.nilsen to group g_all_sales
+SUCCESS: Added pal.h.dahl to group g_all_consultants
+SUCCESS: Added silje.k.andersen to group g_all_consultants
+SUCCESS: Added oystein.j.berg to group g_all_consultants
+SUCCESS: Added hakon.t.evensen to group g_all_consultants
+SUCCESS: Added marte.c.odegard to group g_all_consultants
+SUCCESS: Added bjorn.a.hagen to group g_all_consultants
+SUCCESS: Added eva.k.roed to group g_all_consultants
+SUCCESS: Added nils.e.gjerde to group g_all_consultants
+SUCCESS: Added ase.m.viken to group g_all_consultants
+SUCCESS: Added lars.f.berntsen to group g_all_finance

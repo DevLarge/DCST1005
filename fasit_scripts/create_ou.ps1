@@ -1,3 +1,5 @@
+# https://github.com/torivarm/dcst1005/blob/main/Guides/02-03-CreateOU.md 
+
 $domainPath = "DC=infraIT,DC=sec"
 function Create-ADOU {
     param (
@@ -10,12 +12,12 @@ function Create-ADOU {
         if (Get-ADOrganizationalUnit -Filter "Name -eq '$Name'" -SearchBase $Path) {
             # If exists
             Write-Host "OU: $Name already exists!" -ForegroundColor Yellow
-            return $true
+            
         } else {
             # If not exists
             New-ADOrganizationalUnit -Name $Name -Path $Path
             Write-Host "OU: $Name in $Path was successfully created" -ForegroundColor Green
-            return $true
+            
         }
     } catch {
         Write-Host "Error while creating ADOU" -ForegroundColor Red

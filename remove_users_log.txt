@@ -1,0 +1,15 @@
+SUCCESS: Removed member astrid.e.haugen from group g_all_hr
+SUCCESS: Removed member ole.m.larsen from group g_all_it
+SUCCESS: Removed member ingrid.m.ostby from group g_all_it
+SUCCESS: Removed member erik.a.solberg from group g_all_sales
+SUCCESS: Removed member kristin.s.nilsen from group g_all_sales
+SUCCESS: Removed member pal.h.dahl from group g_all_consultants
+SUCCESS: Removed member silje.k.andersen from group g_all_consultants
+SUCCESS: Removed member oystein.j.berg from group g_all_consultants
+SUCCESS: Removed member hakon.t.evensen from group g_all_consultants
+SUCCESS: Removed member marte.c.odegard from group g_all_consultants
+SUCCESS: Removed member bjorn.a.hagen from group g_all_consultants
+SUCCESS: Removed member eva.k.roed from group g_all_consultants
+SUCCESS: Removed member nils.e.gjerde from group g_all_consultants
+SUCCESS: Removed member ase.m.viken from group g_all_consultants
+SUCCESS: Removed member lars.f.berntsen from group g_all_finance

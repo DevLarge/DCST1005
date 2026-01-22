@@ -1,0 +1,15 @@
+SUCCESS: Created user ole.m.larsen with password: System.Security.SecureString
+SUCCESS: Created user ingrid.m.ostby with password: System.Security.SecureString
+SUCCESS: Created user astrid.e.haugen with password: System.Security.SecureString
+SUCCESS: Created user erik.a.solberg with password: System.Security.SecureString
+SUCCESS: Created user kristin.s.nilsen with password: System.Security.SecureString
+SUCCESS: Created user lars.f.berntsen with password: System.Security.SecureString
+SUCCESS: Created user pal.h.dahl with password: System.Security.SecureString
+SUCCESS: Created user silje.k.andersen with password: System.Security.SecureString
+SUCCESS: Created user oystein.j.berg with password: System.Security.SecureString
+SUCCESS: Created user hakon.t.evensen with password: System.Security.SecureString
+SUCCESS: Created user marte.c.odegard with password: System.Security.SecureString
+SUCCESS: Created user bjorn.a.hagen with password: System.Security.SecureString
+SUCCESS: Created user eva.k.roed with password: System.Security.SecureString
+SUCCESS: Created user nils.e.gjerde with password: System.Security.SecureString
+SUCCESS: Created user ase.m.viken with password: System.Security.SecureString
