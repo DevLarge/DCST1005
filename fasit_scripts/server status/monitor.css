@@ -1,0 +1,106 @@
+/* General page styling */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+/* Table styling */
+table {
+    width: 95%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+th {
+    background-color: #34495e;
+    color: white;
+    padding: 12px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    vertical-align: top;
+}
+
+/* Alternating row colors */
+tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Hover effect */
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Service status formatting */
+.service-running {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.service-stopped {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.service-notfound {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+/* Make ServiceStatus column readable */
+td.service-column {
+    text-align: left;
+    white-space: normal;
+    line-height: 1.4em;
+    font-size: 14px;
+}
+
+/* Footer timestamp */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+    font-size: 13px;
+}
+
+.service-container {
+    width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.service-container h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.service-container h3 {
+    margin-top: 15px;
+    color: #34495e;
+}
+
+.service-line {
+    margin-left: 20px;
+    padding: 3px 0;
+}
