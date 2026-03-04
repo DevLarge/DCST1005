@@ -1,45 +1,157 @@
-$logPath = "C:\Logs\ServerMonitoring"
-if (-not (Test-Path $logPath)) {
-    New-Item -Path $logPath -ItemType Directory -Force | Out-Null
+# ==============================
+# Failed Logons Report (EventID 4625)
+# ==============================
+
+$RootPath  = "C:\Logs"
+$Computers = @("DC1", "SRV1", "CL1")   # legg til/fjern maskiner her
+$HoursBack = 24                            # hvor langt tilbake i tid
+
+if (-not (Test-Path $RootPath)) {
+    New-Item -ItemType Directory -Path $RootPath | Out-Null
 }
 
-$servers = @("DC1", "SRV1", "CL1", "MGR")   # legg til flere hvis du vil
+# ------------------------------
+# ScriptBlock: hent failed logons
+# ------------------------------
+$ScriptBlock = {
+    param($HoursBack)
 
-$logFile = "$logPath\LoginFailures.csv"
+    $events = Get-WinEvent -FilterHashtable @{
+        LogName   = 'Security'
+        Id        = 4625
+        StartTime = (Get-Date).AddHours(-$HoursBack)
+    } -ErrorAction Stop
 
-while ($true) {
+    foreach ($e in $events) {
 
-    $results = foreach ($server in $servers) {
+        # ---- LogonType ----
+        # ---- LogonType (robust parsing fra Message) ----
+$msg = $e.Message
 
-        Invoke-Command -ComputerName $server -ScriptBlock {
+$logonTypeNum = if ($msg -match "Logon Type:\s+(\d+)") {
+    [int]$matches[1]
+} else {
+    -1
+}
 
-            # Hent siste 5 minutter med feillogger
-            $events = Get-WinEvent -FilterHashtable @{
-                LogName = 'Security'
-                Id      = 4625
-                StartTime = (Get-Date).AddMinutes(-5)
-            }
+$logonTypeText = switch ($logonTypeNum) {
+    2  { "Interactive" }
+    3  { "Network" }
+    4  { "Batch" }
+    5  { "Service" }
+    7  { "Unlock" }
+    8  { "NetworkCleartext" }
+    9  { "NewCredentials" }
+    10 { "RDP" }
+    11 { "CachedInteractive" }
+    default { "Unknown" }
+}
 
-            foreach ($event in $events) {
+$logonTypeFinal = if ($logonTypeNum -gt 0) {
+    "$logonTypeNum ($logonTypeText)"
+} else {
+    "Unknown"
+}
 
-                $xml = [xml]$event.ToXml()
 
-                # Hent ut relevante felter
-                [PSCustomObject]@{
-                    Timestamp   = $event.TimeCreated
-                    Computer    = $env:COMPUTERNAME
-                    Username    = $xml.Event.EventData.Data[5].'#text'
-                    IPAddress   = $xml.Event.EventData.Data[19].'#text'
-                    FailureCode = $xml.Event.EventData.Data[7].'#text'
-                    Reason      = $xml.Event.EventData.Data[8].'#text'
-                }
-            }
+        # ---- FailureReason (fra Message) ----
+        $msg = $e.Message -replace "`r`n", " "
+        $failureReason = if ($msg -match "Failure Reason:\s+(.*?)(?:Status|$)") {
+            $matches[1].Trim()
+        } else {
+            "Unknown"
+        }
+
+        [PSCustomObject]@{
+            Server        = $env:COMPUTERNAME
+            Time          = $e.TimeCreated
+            Account       = $e.Properties[5].Value
+            Domain        = $e.Properties[6].Value
+            IPAddress     = $e.Properties[19].Value
+            LogonType     = $logonTypeFinal
+            FailureReason = $failureReason
         }
     }
-
-    if ($results) {
-        $results | Export-Csv -Path $logFile -NoTypeInformation -Append
-    }
-
-    Start-Sleep -Seconds 2
 }
+
+# ------------------------------
+# Hent data fra alle maskiner
+# ------------------------------
+$Results = foreach ($Computer in $Computers) {
+    Invoke-Command -ComputerName $Computer `
+        -ScriptBlock $ScriptBlock `
+        -ArgumentList $HoursBack `
+        -ErrorAction SilentlyContinue
+}
+
+# ------------------------------
+# CSV
+# ------------------------------
+$CsvPath = "$RootPath\FailedLogons.csv"
+$Results | Sort-Object Time -Descending |
+    Export-Csv -Path $CsvPath -NoTypeInformation -Encoding UTF8
+
+# ------------------------------
+# HTML
+# ------------------------------
+$HtmlPath = "$RootPath\FailedLogons.html"
+
+$html = @"
+<html>
+<head>
+<title>Failed Logons Report</title>
+</head>
+<body>
+<h1>Failed Logons (EventID 4625) – last $HoursBack hours</h1>
+<table border="1" cellpadding="5">
+<tr>
+<th>Server</th>
+<th>Time</th>
+<th>Account</th>
+<th>Domain</th>
+<th>IP Address</th>
+<th>LogonType</th>
+<th>FailureReason</th>
+</tr>
+"@
+
+foreach ($r in $Results | Sort-Object Time -Descending) {
+
+    # RDP i rødt
+    $logonColor = if ($r.LogonType -like "10*") { "red" } else { "black" }
+
+    $html += "<tr>
+        <td>$($r.Server)</td>
+        <td>$($r.Time)</td>
+        <td>$($r.Account)</td>
+        <td>$($r.Domain)</td>
+        <td>$($r.IPAddress)</td>
+        <td><font color='$logonColor'>$($r.LogonType)</font></td>
+        <td>$($r.FailureReason)</td>
+    </tr>"
+}
+
+$html += "</table></body></html>"
+
+$html | Out-File -FilePath $HtmlPath -Encoding UTF8
+
+Write-Host "CSV:  $CsvPath"
+Write-Host "HTML: $HtmlPath"
+
+# ==============================
+# Publiser HTML til IIS på SRV1
+# ==============================
+
+$DestinationServer = "SRV1"
+$IISPath = "C:\inetpub\wwwroot\FailedLogons.html"
+
+$session = New-PSSession -ComputerName $DestinationServer
+
+Copy-Item -Path $HtmlPath `
+          -Destination $IISPath `
+          -ToSession $session `
+          -Force
+
+Remove-PSSession $session
+
+Write-Host "HTML-rapport publisert til IIS på $DestinationServer"
